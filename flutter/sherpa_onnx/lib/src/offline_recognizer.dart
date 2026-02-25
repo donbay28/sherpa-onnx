@@ -753,28 +753,27 @@ class OfflineRecognizer {
     ptr = nullptr;
   }
 
-  /// The user is responsible to call the OfflineRecognizer.free()
-  /// method of the returned instance to avoid memory leak.
-  static void ensureInitialized() {
-    _ensureInitialized();
+  static bool _initialized = false;
+
+  static void _ensureInit() {
+    if (_initialized) return;
+    final lib = SherpaOnnxBindings.openDynamicLibrary();
+    SherpaOnnxBindings.init(lib);
+    _initialized = true;
   }
-  
+
   factory OfflineRecognizer(OfflineRecognizerConfig config) {
+    _ensureInit();
+
     final c = convertConfig(config);
-
-    // if (SherpaOnnxBindings.createOfflineRecognizer == null) {
-    //   throw Exception("Please initialize sherpa-onnx first");
-    // } 
-
-    final ptr = SherpaOnnxBindings.createOfflineRecognizer?.call(c) ?? nullptr;
+    final ptr =
+        SherpaOnnxBindings.createOfflineRecognizer?.call(c) ?? nullptr;
 
     if (ptr == nullptr) {
       throw Exception(
         "Failed to create offline recognizer. Please check your config",
       );
     }
-
-    freeConfig(c);
 
     return OfflineRecognizer._(ptr: ptr, config: config);
   }
