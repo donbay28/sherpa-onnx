@@ -764,7 +764,7 @@ class OfflineRecognizer {
 
     // if (SherpaOnnxBindings.createOfflineRecognizer == null) {
     //   throw Exception("Please initialize sherpa-onnx first");
-    // }
+    // } 
 
     final ptr = SherpaOnnxBindings.createOfflineRecognizer?.call(c) ?? nullptr;
 
