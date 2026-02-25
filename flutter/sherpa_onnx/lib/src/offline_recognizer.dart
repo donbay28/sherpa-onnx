@@ -755,13 +755,16 @@ class OfflineRecognizer {
 
   /// The user is responsible to call the OfflineRecognizer.free()
   /// method of the returned instance to avoid memory leak.
-
+  static void ensureInitialized() {
+    _ensureInitialized();
+  }
+  
   factory OfflineRecognizer(OfflineRecognizerConfig config) {
     final c = convertConfig(config);
 
-    if (SherpaOnnxBindings.createOfflineRecognizer == null) {
-      throw Exception("Please initialize sherpa-onnx first");
-    }
+    // if (SherpaOnnxBindings.createOfflineRecognizer == null) {
+    //   throw Exception("Please initialize sherpa-onnx first");
+    // }
 
     final ptr = SherpaOnnxBindings.createOfflineRecognizer?.call(c) ?? nullptr;
 
